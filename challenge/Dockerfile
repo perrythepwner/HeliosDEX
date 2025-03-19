@@ -48,7 +48,6 @@ RUN true \
     && true
 
 EXPOSE 8888
-EXPOSE 8080
 EXPOSE 8000
 
 USER root
