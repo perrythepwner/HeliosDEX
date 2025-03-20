@@ -17,7 +17,7 @@ Difficulty: <font color=green>Easy</font>
 This DEFI challenge consists in exploiting a DEX that uses unsafe arithmetic operations from the [OZ `Math.sol` library](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/Math.sol). The goal is to repeat trades to accumulate rounding errors and eventually drain the contract's balance with a one shot refund trade.
 
 # Description
-> [...]
+> You stand victorious, panting, over the fallen form of Eldorion. The beast's eternal resilience proved no match for your cunning and skill, adventurer. The path to the city gates of Eldoria now lies open, but the journey is far from over. As you approach, a shimmering structure catches your eye: the HeliosDEX, a decentralized exchange powered by the radiant energy of Helios himself. Whispers tell of travelers using this exchange to amass fortunes, stocking up on rare items and crucial supplies before braving the perils of Eldoria. Perhaps you can use this opportunity to your advantage...
 
 # Skills Required
 - Basic understanding of Solidity and ERC20 token standards.
@@ -28,7 +28,7 @@ This DEFI challenge consists in exploiting a DEX that uses unsafe arithmetic ope
 - Recognizing how different rounding modes (Floor, Ceil, Trunc, Expand) in the [OZ `Math.sol` library](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/Math.sol)affect swap calculations.
 
 # Challenge Scenario
-[...]
+We're given two contracts: A classic `Setup.sol` contract and a `HeliosDEX.sol` contract. As the name suggests, it's a decentralized exchange that allows users to swap between three different tokens: EldorionFang (ELD), MalakarEssence (MAL), and HeliosLuminaShards (HLS).  
 
 # Analyzing the Source Code
 
@@ -232,7 +232,7 @@ Focusing on the main functionalities, we notice three swap functions, each with 
 - **`swapForMAL()`**: Uses the "`Ceil`" rounding mode (denoted as value 1). **This rounding direction effectively rounds up to the nearest integer**, meaning that on floating-point results like `1.50000001`, the output tokens amount is rounded up to `2` tokens, returning a favorable amount to the player respectively to the initial swap value.
 - **`swapForHLS()`**: Uses the "`Expand`" rounding mode (denoted as value 3). **This rounding direction ALWAYS rounds up**, meaning that on floating-point results like `1.00000001`, the output tokens amount is rounded up to `2` tokens, returning a **VERY** favorable amount to the player respectively to the initial swap value.
 
-Based on that observation, we understant that we can exploit the `swapForHLS` and `swapForMAL` functions with specifically crafted swap values such that when divided by the exchange rate, the result is a floating-point number that will be rounded up, thus giving us more tokens than expected.  
+Based on that observation, we understand that we can exploit the `swapForHLS` and `swapForMAL` functions with specifically crafted swap values such that when divided by the exchange rate, the result is a floating-point number that will be rounded up, thus giving us more tokens than expected.  
 
 Moreover, a refund function (`oneTimeRefund`) is implemented and it's based on the hardcoded original exchange rates that allows users to return tokens in exchange back for Ethers. Given that functionality, we can exploit the rounding behavior to later monetize profitable trades back to ETH.  
 
